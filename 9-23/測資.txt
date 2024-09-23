@@ -1,0 +1,43 @@
+a D01 THOMAS TUCKER 3 男
+a D02 KAYLEE SIMPSON 3 女
+a D03 LEVI BROOKS 1 男
+b C01 計概
+b C02 網路概論
+b C03 作業系統
+b C04 演算法
+c D01 C01
+c D01 C02
+c D01 C04
+c D02 C02
+c D02 C03
+c D02 C04
+c D03 C01
+c D03 C03
+d D01 計概 50 80
+d D01 網路概論 60 90
+d D01 演算法 70 100
+d D02 網路概論 70 70
+d D02 作業系統 60 60
+d D02 演算法 90 90
+d D03 計概 100 90
+d D03 作業系統 90 100
+e 計概
+e 網路概論
+e 作業系統
+e 演算法
+
+
+
+Output
+
+學號    姓名    年級    性別    總成績
+D01 THOMAS TUCKER 3 男 78.0
+D02 KAYLEE SIMPSON 3 女 70.0
+
+學號    姓名    年級    性別    總成績
+D02 KAYLEE SIMPSON 3 女 60.0
+D03 LEVI BROOKS 1 男 96.0
+
+學號    姓名    年級    性別    總成績
+D01 THOMAS TUCKER 3 男 88.0
+D02 KAYLEE SIMPSON 3 女 90.0

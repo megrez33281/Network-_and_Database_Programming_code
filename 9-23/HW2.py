@@ -46,7 +46,10 @@ def GetClassStudentGrade(cur, courseName):
     #print(command)
     cur.execute(command)
     grades = cur.fetchall()
-    print(grades)
+    print("學號\t姓名\t年級\t性別\t總成績")
+    for grade in grades:
+        print(grade[0], grade[1] + ' ' + grade[2], grade[3], grade[4], grade[5])
+    print()
 
 def clear(cur):
     cur.execute('delete  from student')
@@ -56,6 +59,7 @@ def clear(cur):
 
 if __name__ == '__main__':
     conn, cur = openDatabase('database')
+    #clear(cur)
     print("指令說明\n")
     print("a 新增學生資料：a 學號\t姓名\t年級\t性別")
     print("b 新增課程資料：b 課程號碼\t課名")
@@ -81,20 +85,13 @@ if __name__ == '__main__':
         
         elif command_type == 'e' and len(command_list) == 2:
             GetClassStudentGrade(cur, command_list[1])
+
+        elif command_type == '-1':
+            break
         
         else:
             print("錯誤的指令！")
 
         command = input("請輸入指令：")
         
-
-
-    #InsertStudentData(cur, 'D05', 'KAYLEE', 'SIMPSON', 3, '女')
-    #InsertStudentData(cur, 'D02', 'LEVI', 'BROOKS', 1, '男')
-    #GetClassStudentGrade(cur, '計實')
-    #InsertStudentClassData(cur, 'D02', 'C02')
-    #InsertStudentGrade(cur, 'D02', '計實', 85, 77)
-    
-
-
     closeDatabase(conn)
