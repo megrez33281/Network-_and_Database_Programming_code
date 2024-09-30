@@ -13,5 +13,4 @@ if __name__ == '__main__':
     app = wx.App()
     frm = MyFrame1(None)
     frm.Show()
-    frm.ComboBoxInit()
     app.MainLoop()

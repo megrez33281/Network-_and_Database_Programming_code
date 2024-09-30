@@ -23,9 +23,74 @@ class MyFrame1 ( wx.Frame ):
 	def __init__( self, parent ):
 		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 1073,587 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
+		###Create Tab###
+		p = wx.Panel(self)
+		self.notebook1 = wx.Notebook(p)
+		#建立分頁
+		tab1 = MyPanel3(self.notebook1)
+		tab2 = MyPanel4(self.notebook1)
+		tab3 = MyPanel5(self.notebook1)
+		tab4 = MyPanel7(self.notebook1)
+
+		#將建立的分頁加入Frame，並給予名稱
+		self.notebook1.AddPage(tab1, "新增學生資料")
+		self.notebook1.AddPage(tab2, "新增課程資料")
+		self.notebook1.AddPage(tab3, "新增選課資料")
+		self.notebook1.AddPage(tab4, "查詢總成績")
+
+		#建立切換分頁的監聽
+		self.notebook1.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_tab_changed)
+
+		#設定layout
+		sizer = wx.BoxSizer()
+		sizer.Add(self.notebook1, 1, wx.EXPAND)
+		p.SetSizer(sizer)
+		
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 
-		bSizer1 = wx.BoxSizer( wx.VERTICAL )
+
+		self.Centre( wx.BOTH )
+
+	def __del__( self ):
+		pass
+
+	def on_tab_changed(self, event):
+		selected_page = self.notebook1.GetSelection()
+		if selected_page == 2:
+			MyPanel = self.notebook1.GetPage(selected_page)
+			studentIDs = getAllStudentID()
+			MyPanel.m_comboBox3.Clear()
+			MyPanel.m_comboBox3.SetValue("學號")
+			for sID in studentIDs:
+				MyPanel.m_comboBox3.Append(sID)
+
+			Courses = getAllCourse()
+			MyPanel.m_comboBox4.Clear()
+			MyPanel.m_comboBox4.SetValue("課程代碼")
+			for courses in Courses:
+				MyPanel.m_comboBox4.Append(courses[0])
+
+		elif selected_page == 3:
+			MyPanel = self.notebook1.GetPage(selected_page)
+			Courses = getAllCourse()
+			MyPanel.m_comboBox2.Clear()
+			MyPanel.m_comboBox2.SetValue("課程名稱")
+			for courses in Courses:
+				MyPanel.m_comboBox2.Append(courses[1])
+
+		#print(selected_page)
+    	
+
+
+
+###########################################################################
+## Class MyPanel3
+###########################################################################
+
+class MyPanel3 ( wx.Panel ):
+
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 602,300 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
 		wSizer2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
@@ -59,7 +124,39 @@ class MyFrame1 ( wx.Frame ):
 		wSizer2.Add( self.m_button1, 0, wx.ALL, 5 )
 
 
-		bSizer1.Add( wSizer2, 1, wx.EXPAND, 5 )
+		self.SetSizer( wSizer2 )
+		self.Layout()
+
+		# Connect Events
+		self.m_button1.Bind( wx.EVT_BUTTON, self.StudentDataInsert )
+
+	def __del__( self ):
+		pass
+
+
+
+
+	# Virtual event handlers, override them in your derived class
+	def StudentDataInsert( self, event ):
+		studentID = self.m_textCtrl7.Value
+		Name = self.m_textCtrl27.Value
+		Fname = Name.split(" ")[0]
+		Lname = Name.split(" ")[1]
+		grade = self.m_radioBox2.GetString(self.m_radioBox2.GetSelection())
+		sex = self.m_radioBox1.GetString(self.m_radioBox1.GetSelection())
+		InsertStudentData(studentID, Fname, Lname, grade, sex)
+		self.m_textCtrl7.Value = ""
+		self.m_textCtrl27.Value= ""
+
+
+###########################################################################
+## Class MyPanel4
+###########################################################################
+
+class MyPanel4 ( wx.Panel ):
+
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
 		wSizer3 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
@@ -83,7 +180,33 @@ class MyFrame1 ( wx.Frame ):
 		wSizer3.Add( self.m_button2, 0, wx.ALL, 5 )
 
 
-		bSizer1.Add( wSizer3, 1, wx.EXPAND|wx.LEFT, 5 )
+		self.SetSizer( wSizer3 )
+		self.Layout()
+
+		# Connect Events
+		self.m_button2.Bind( wx.EVT_BUTTON, self.ClassDataInsert )
+
+	def __del__( self ):
+		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def ClassDataInsert( self, event ):
+		CourseID = self.m_textCtrl12.Value
+		CourseName = self.m_textCtrl13.Value
+		InsertClassData(CourseID, CourseName)
+		self.m_textCtrl12.Value = ""
+		self.m_textCtrl13.Value = ""
+
+
+###########################################################################
+## Class MyPanel5
+###########################################################################
+
+class MyPanel5 ( wx.Panel ):
+
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
 		wSizer4 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
@@ -115,11 +238,39 @@ class MyFrame1 ( wx.Frame ):
 		wSizer4.Add( self.m_button5, 0, wx.ALL, 5 )
 
 
-		bSizer1.Add( wSizer4, 1, wx.EXPAND, 5 )
+		self.SetSizer( wSizer4 )
+		self.Layout()
+
+		# Connect Events
+		self.m_button5.Bind( wx.EVT_BUTTON, self.StudentClassInsert )
+
+	def __del__( self ):
+		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def StudentClassInsert( self, event ):
+		StudentID = self.m_comboBox3.GetValue()
+		CourseID = self.m_comboBox4.GetValue()
+		MidScore = self.m_textCtrl23.Value
+		FinalScore = self.m_textCtrl24.Value
+		InsertStudentClassData(StudentID, CourseID, MidScore, FinalScore)
+		self.m_textCtrl23.Value = ""
+		self.m_textCtrl24.Value = ""
+
+
+###########################################################################
+## Class MyPanel7
+###########################################################################
+
+class MyPanel7 ( wx.Panel ):
+
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
 
 		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		fgSizer5 = wx.FlexGridSizer( 0, 2, 0, 0 )
+		fgSizer5 = wx.FlexGridSizer( 0, 0, 0, 0 )
 		fgSizer5.SetFlexibleDirection( wx.BOTH )
 		fgSizer5.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
@@ -130,86 +281,44 @@ class MyFrame1 ( wx.Frame ):
 		self.m_button7 = wx.Button( self, wx.ID_ANY, u"查詢總成績", wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer5.Add( self.m_button7, 0, wx.ALL, 5 )
 
-		self.m_bitmap2 = wx.StaticBitmap( self, wx.ID_ANY, wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer5.Add( self.m_bitmap2, 0, wx.ALL, 5 )
+
+		wSizer5.Add( fgSizer5, 8, wx.EXPAND, 50 )
+
+		bSizer2 = wx.BoxSizer( wx.VERTICAL )
+
+		bSizer2.SetMinSize( wx.Size( 1000,1000 ) )
+		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"學號\t姓名\t總成績", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText7.Wrap( -1 )
+
+		self.m_staticText7.SetMinSize( wx.Size( 1000,1000 ) )
+
+		bSizer2.Add( self.m_staticText7, 0, wx.ALL, 5 )
 
 
-		wSizer5.Add( fgSizer5, 5, wx.EXPAND, 5 )
+		wSizer5.Add( bSizer2, 8, wx.EXPAND, 6 )
 
 
-		bSizer1.Add( wSizer5, 5, wx.EXPAND, 5 )
-
-
-		self.SetSizer( bSizer1 )
+		self.SetSizer( wSizer5 )
 		self.Layout()
 
-		self.Centre( wx.BOTH )
-
 		# Connect Events
-		self.m_button1.Bind( wx.EVT_BUTTON, self.StudentDataInsert )
-		self.m_button2.Bind( wx.EVT_BUTTON, self.ClassDataInsert )
-		self.m_button5.Bind( wx.EVT_BUTTON, self.StudentClassInsert )
 		self.m_button7.Bind( wx.EVT_BUTTON, self.ScoreSearch )
-
 
 	def __del__( self ):
 		pass
 
 
-
 	# Virtual event handlers, override them in your derived class
-	#新增學生資料
-	def StudentDataInsert( self, event ):
-		studentID = self.m_textCtrl7.Value
-		Name = self.m_textCtrl27.Value
-		Fname = Name.split(" ")[0]
-		Lname = Name.split(" ")[1]
-		grade = self.m_radioBox2.GetString(self.m_radioBox2.GetSelection())
-		sex = self.m_radioBox1.GetString(self.m_radioBox1.GetSelection())
-		InsertStudentData(studentID, Fname, Lname, grade, sex)
-		self.m_comboBox3.Append(studentID)
-		self.m_textCtrl7.Value = ""
-		self.m_textCtrl27.Value= ""
-
-
-	#新增課程
-	def ClassDataInsert( self, event ):
-		CourseID = self.m_textCtrl12.Value
-		CourseName = self.m_textCtrl13.Value
-		InsertClassData(CourseID, CourseName)
-		self.m_comboBox2.Append(CourseName)
-		self.m_comboBox4.Append(CourseID)
-		self.m_textCtrl12.Value = ""
-		self.m_textCtrl13.Value = ""
-
-	def StudentClassInsert( self, event ):
-		StudentID = self.m_comboBox3.GetValue()
-		CourseID = self.m_comboBox4.GetValue()
-		MidScore = self.m_textCtrl23.Value
-		FinalScore = self.m_textCtrl24.Value
-		InsertStudentClassData(StudentID, CourseID, MidScore, FinalScore)
-		self.m_textCtrl23.Value = ""
-		self.m_textCtrl24.Value = ""
-		
-
 	def ScoreSearch( self, event ):
 		CourseName = self.m_comboBox2.GetValue()
 		grades = GetClassStudentGrade(CourseName)
-		print("學號\t姓名\t總成績")
+		newLabel = "學號\t姓名\t總成績\n"
 		for grade in grades:
-			print(grade[0], grade[1], grade[2])
-		print()
+			newLabel += str(grade[0]) + "\t" +  str(grade[1]) + "\t" +  str(grade[2]) + "\n"
+		self.m_staticText7.SetLabel(newLabel)
 		#MakeCSV(CourseName + "_總成績", grades)
 
-	def ComboBoxInit(self):
-		#讀取資料庫中已有的資料
-		studentIDs = getAllStudentID()
-		for sID in studentIDs:
-			self.m_comboBox3.Append(sID)
-		
-		Courses = getAllCourse()
-		for course in Courses:
-			self.m_comboBox2.Append(course[1])
-			self.m_comboBox4.Append(course[0])
+
+	
         
 
