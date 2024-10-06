@@ -6,7 +6,7 @@
 # see https://stackoverflow.com/questions/29846087/microsoft-visual-c-14-0-is-required-unable-to-find-vcvarsall-bat
 
 import MySQLdb
-db=MySQLdb.connect(host="localhost", user="newuser", password="Test1234", db="test_db")
+db=MySQLdb.connect(host="localhost", user="apple", password="911004", db="test")
 cur=db.cursor()
 cur.execute("Select * from employee" )
 for emp in cur.fetchall():
