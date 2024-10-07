@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from FrontEndCommand import clear, GetClassStudentGrade, InsertStudentClassData, InsertClassData, UpdateMidterm, getCIDFromEnrollment,  getSIDFromEnrollment, UpdateFinal,  InsertStudentData, getAllStudentID, getAllCourse
+from FrontEndCommand import clear, GetClassStudentGrade, InsertStudentClassData, InsertClassData, UpdateMidterm, getCnameFromEnrollment, getCIDFromEnrollment,  getSIDFromEnrollment, UpdateFinal,  InsertStudentData, getAllStudentID, getAllCourse
 ###########################################################################
 ## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
@@ -248,6 +248,7 @@ class MyPanel5 ( wx.Panel ):
 		self.Layout()
 
 		# Connect Events
+		self.SIDList.Bind( wx.EVT_COMBOBOX, self.SIDChoose)
 		self.m_button5.Bind( wx.EVT_BUTTON, self.StudentClassInsert )
 
 	def __del__( self ):
@@ -255,6 +256,21 @@ class MyPanel5 ( wx.Panel ):
 
 
 	# Virtual event handlers, override them in your derived class
+	def SIDChoose( self, event ):
+		StudentID = self.SIDList.GetValue()
+		CIDs = getCIDFromEnrollment(StudentID)
+		AllCID = getAllCourse()
+		self.CIDList.Clear()
+		self.CIDList.SetValue("課程代碼")
+		for courses in AllCID:
+			cid = courses[0]
+			inStCid = 0
+			for stCid in CIDs:
+				if cid == stCid[0]:
+					inStCid = 1
+			if inStCid == 0:
+				self.CIDList.Append(cid)
+		
 	def StudentClassInsert( self, event ):
 		StudentID = self.SIDList.GetValue()
 		CourseID = self.CIDList.GetValue()
@@ -288,7 +304,7 @@ class MyPanel7 ( wx.Panel ):
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
 		bSizer2.SetMinSize( wx.Size( 1000,1000 ) )
-		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"學號\t姓名\t總成績", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"學號\t姓名\t\t總成績", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText7.Wrap( -1 )
 
 		self.m_staticText7.SetMinSize( wx.Size( 1000,1000 ) )
@@ -313,9 +329,9 @@ class MyPanel7 ( wx.Panel ):
 	def ScoreSearch( self, event ):
 		CourseName = self.m_comboBox2.GetValue()
 		grades = GetClassStudentGrade(CourseName)
-		newLabel = "學號\t姓名\t總成績\n"
+		newLabel = "學號\t姓名\t\t總成績\n"
 		for grade in grades:
-			newLabel += str(grade[0]) + "\t" +  str(grade[1]) + "\t" +  str(grade[2]) + "\n"
+			newLabel += str(grade[0]) + "\t" +  str(grade[1]) + " " + str(grade[2]) + "\t" +  str(grade[3]) + "\n"
 		self.m_staticText7.SetLabel(newLabel)
 		#MakeCSV(CourseName + "_總成績", grades)
 
@@ -365,7 +381,7 @@ class AddMidScore ( wx.Panel ):
 	# Virtual event handlers, override them in your derived class
 	def SIDChoose(self, event):
 		StudentID = self.SIDList.GetValue()
-		Courses = getCIDFromEnrollment(StudentID)
+		Courses = getCnameFromEnrollment(StudentID)
 		self.CIDList.Clear()
 		self.CIDList.SetValue("課程名稱")
 		for courses in Courses:
@@ -425,7 +441,7 @@ class AddFinalScore ( wx.Panel ):
 
 	def SIDChoose(self, event):
 		StudentID = self.SIDList.GetValue()
-		Courses = getCIDFromEnrollment(StudentID)
+		Courses = getCnameFromEnrollment(StudentID)
 		self.CIDList.Clear()
 		self.CIDList.SetValue("課程名稱")
 		for courses in Courses:

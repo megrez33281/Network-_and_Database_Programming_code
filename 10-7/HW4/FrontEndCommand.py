@@ -34,7 +34,7 @@ def UpdateFinal(studentID, courseName, score):
 def GetClassStudentGrade(courseName):
     #G. 查詢總成績
     cid = QueryCID(courseName)
-    grades = QueryData(["SID", "Fname || ' ' || Lname, MidScore*0.4 + FinalScore*0.6"], ["Enrollment", "STUDENT"], "CID = " + AddComma(cid) + "and SID = StudentID")
+    grades = QueryData(["SID", "Fname", "Lname", "MidScore*0.4 + FinalScore*0.6"], ["Enrollment", "STUDENT"], "CID = " + AddComma(cid) + " and SID = StudentID")
     return grades
 
 def getAllStudentID():
@@ -55,7 +55,7 @@ def getSIDFromEnrollment():
         a_list.append(data)
     return a_list
 
-def getCIDFromEnrollment(SID):
+def getCnameFromEnrollment(SID):
     datas = QueryData(["CID"], ["Enrollment"], "SID = " + AddComma(SID))
     CourseNames = []
     for data in datas:
@@ -63,6 +63,10 @@ def getCIDFromEnrollment(SID):
         #print(CourseName)
         CourseNames.append(CourseName)
     return CourseNames
+
+def getCIDFromEnrollment(SID):
+    datas = QueryData(["CID"], ["Enrollment"], "SID = " + AddComma(SID))
+    return datas
 
     
 def clear():
