@@ -68,6 +68,18 @@ def getCIDFromEnrollment(SID):
     datas = QueryData(["CID"], ["Enrollment"], "SID = " + AddComma(SID))
     return datas
 
+def getWarningList():
+    #取得Reminder中所有資料
+    WarningStudent = QueryData(["SID", "CID"], ["Reminder"])
+    WarningList = []
+    for warning in WarningStudent:
+        student_data = QueryData(["Fname", "Lname", "MidScore", "Email"], ["student", "Enrollment"], "SID = " + AddComma(warning[0]) + " and CID = " + AddComma(warning[1]))[0]
+        CourseName = QueryData(["Cname"], ["Course"], "CID = " + AddComma(warning[1]))[0][0]
+        data_list = [student_data[0] + " " + student_data[1],  CourseName, student_data[2], student_data[3]]
+        #print(data_list)
+        WarningList.append(data_list)
+    return WarningList
+        
     
 def clear():
     DeleteData('student')

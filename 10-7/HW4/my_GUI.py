@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from FrontEndCommand import clear, GetClassStudentGrade, InsertStudentClassData, InsertClassData, UpdateMidterm, getCnameFromEnrollment, getCIDFromEnrollment,  getSIDFromEnrollment, UpdateFinal,  InsertStudentData, getAllStudentID, getAllCourse
+from FrontEndCommand import clear, GetClassStudentGrade, InsertStudentClassData, InsertClassData, getWarningList, UpdateMidterm, getCnameFromEnrollment, getCIDFromEnrollment,  getSIDFromEnrollment, UpdateFinal,  InsertStudentData, getAllStudentID, getAllCourse
 ###########################################################################
 ## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
@@ -30,16 +30,18 @@ class MyFrame1 ( wx.Frame ):
 		tab2 = MyPanel4(self.notebook1)
 		tab3 = MyPanel5(self.notebook1)
 		tab4 = AddMidScore(self.notebook1)
-		tab5 = AddFinalScore(self.notebook1)
-		tab6 = MyPanel7(self.notebook1)
+		tab5 = WarningMail(self.notebook1)
+		tab6 = AddFinalScore(self.notebook1)
+		tab7 = MyPanel7(self.notebook1)
 
 		#將建立的分頁加入Frame，並給予名稱
 		self.notebook1.AddPage(tab1, "新增學生資料")
 		self.notebook1.AddPage(tab2, "新增課程資料")
 		self.notebook1.AddPage(tab3, "新增選課資料")
 		self.notebook1.AddPage(tab4, "輸入期中成績")
-		self.notebook1.AddPage(tab5, "輸入期末成績")
-		self.notebook1.AddPage(tab6, "查詢總成績")
+		self.notebook1.AddPage(tab5, "發送預警郵件")
+		self.notebook1.AddPage(tab6, "輸入期末成績")
+		self.notebook1.AddPage(tab7, "查詢總成績")
 
 		#建立切換分頁的監聽
 		self.notebook1.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_tab_changed)
@@ -59,7 +61,7 @@ class MyFrame1 ( wx.Frame ):
 
 	def on_tab_changed(self, event):
 		selected_page = self.notebook1.GetSelection()
-		if selected_page == 2 or selected_page == 3 or selected_page == 4:
+		if selected_page == 2 or selected_page == 3 or selected_page == 5:
 			MyPanel = self.notebook1.GetPage(selected_page)
 			studentIDs = 0
 			Courses = 0
@@ -85,7 +87,7 @@ class MyFrame1 ( wx.Frame ):
 			for courses in Courses:
 				MyPanel.CIDList.Append(courses[0])
 
-		elif selected_page == 5:
+		elif selected_page == 6:
 			MyPanel = self.notebook1.GetPage(selected_page)
 			Courses = getAllCourse()
 			MyPanel.m_comboBox2.Clear()
@@ -93,6 +95,15 @@ class MyFrame1 ( wx.Frame ):
 			for courses in Courses:
 				MyPanel.m_comboBox2.Append(courses[1])
 
+		elif selected_page == 4:
+			MyPanel = self.notebook1.GetPage(selected_page)
+			newLabel = "{:<40} {:<20} {:<20} {:<20}\n".format("姓名", "科目", "分數", "Email")
+			#newLabel = "姓名\t\t\t科目\t\t分數\t\tEmail\n"
+			student_list = getWarningList()
+			for student in student_list:
+				a_line = "{:<30} {:<20} {:<20} {:<20}\n".format(student[0], student[1], str(student[2]), student[3])
+				newLabel += a_line
+			MyPanel.WarningList.SetLabel(newLabel)
 		#print(selected_page)
     	
 
@@ -274,6 +285,19 @@ class MyPanel5 ( wx.Panel ):
 	def StudentClassInsert( self, event ):
 		StudentID = self.SIDList.GetValue()
 		CourseID = self.CIDList.GetValue()
+		StudentID = self.SIDList.GetValue()
+		CIDs = getCIDFromEnrollment(StudentID)
+		AllCID = getAllCourse()
+		self.CIDList.Clear()
+		self.CIDList.SetValue("課程代碼")
+		for courses in AllCID:
+			cid = courses[0]
+			inStCid = 0
+			for stCid in CIDs:
+				if cid == stCid[0]:
+					inStCid = 1
+			if inStCid == 0 and cid != CourseID:
+				self.CIDList.Append(cid)
 		InsertStudentClassData(StudentID, CourseID)
 
 ###########################################################################
@@ -456,4 +480,52 @@ class AddFinalScore ( wx.Panel ):
 		self.FinalScore.Value = ""
 
         
+###########################################################################
+## Class WarningMail
+###########################################################################
 
+class WarningMail ( wx.Panel ):
+
+	def __init__( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL, name = wx.EmptyString ):
+		wx.Panel.__init__ ( self, parent, id = id, pos = pos, size = size, style = style, name = name )
+
+		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		fgSizer5 = wx.FlexGridSizer( 0, 0, 0, 0 )
+		fgSizer5.SetFlexibleDirection( wx.BOTH )
+		fgSizer5.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
+		self.SendWarningMail = wx.Button( self, wx.ID_ANY, u"發送預警郵件", wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer5.Add( self.SendWarningMail, 0, wx.ALL, 5 )
+
+
+		wSizer5.Add( fgSizer5, 8, wx.EXPAND, 50 )
+
+		bSizer2 = wx.BoxSizer( wx.VERTICAL )
+
+		bSizer2.SetMinSize( wx.Size( 1000,1000 ) )
+		self.WarningList = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.WarningList.Wrap( -1 )
+
+		self.WarningList.SetMinSize( wx.Size( 1000,1000 ) )
+		self.WarningList.SetMaxSize( wx.Size( 1000,1000 ) )
+
+		bSizer2.Add( self.WarningList, 0, wx.ALL, 5 )
+
+
+		wSizer5.Add( bSizer2, 8, wx.EXPAND, 6 )
+
+
+		self.SetSizer( wSizer5 )
+		self.Layout()
+
+		# Connect Events
+		self.SendWarningMail.Bind( wx.EVT_BUTTON, self.HandleWarningMail )
+
+	def __del__( self ):
+		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def HandleWarningMail( self, event ):
+		print("Send Mail!!!")
