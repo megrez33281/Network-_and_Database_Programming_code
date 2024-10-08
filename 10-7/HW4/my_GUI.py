@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from FrontEndCommand import clear, GetClassStudentGrade, InsertStudentClassData, InsertClassData, getWarningList, UpdateMidterm, getCnameFromEnrollment, getCIDFromEnrollment,  getSIDFromEnrollment, UpdateFinal,  InsertStudentData, getAllStudentID, getAllCourse
+from SendMail import sendMail
 ###########################################################################
 ## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
@@ -528,4 +529,29 @@ class WarningMail ( wx.Panel ):
 
 	# Virtual event handlers, override them in your derived class
 	def HandleWarningMail( self, event ):
-		print("Send Mail!!!")
+		#"姓名", "科目", "分數", "Email"
+		student_list = getWarningList()
+		SID_list = []
+		content_list = []
+		for student in student_list:
+			inemail_list = 0
+			for SId in range(0, len(SID_list)):
+				if SID_list[SId] == student[4]:
+					content_list[SId].append([student[0], student[1], student[2], student[3]])
+					inemail_list = 1
+					break
+			if inemail_list == 0:
+				SID_list.append(student[4])
+				content_list.append([[student[0],student[1], student[2], student[3]]])
+		print(SID_list)
+		print(content_list)
+		for SId in range(0, len(SID_list)):
+			body = content_list[0][0][0] + "同學您好：\n" + "您的\n"
+			email = ""
+			for content in content_list[SId]:
+				body += content[1] + " 成績為" + str(content[2]) + "分\n"
+				email = content[3]
+			body += "未達及格標準\n" + "特發出期中預警通知"
+			#print(body)
+			sendMail("期中預警通知", body, email)
+		#print("Send Mail!!!")
