@@ -1,5 +1,5 @@
 ###新增學生資料
-D01 THOMAS TUCKER 3 男 phecda980106download@gmail.com
+D01 THOMAS TUCKER 3 男 phecda980106test@gmail.com
 D02 KAYLEE SIMPSON 3 女 phecda980106test@gmail.com
 D03 LEVI BROOKS 1 男 phecda98010650@gmail.com
 

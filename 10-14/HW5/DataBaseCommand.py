@@ -18,7 +18,7 @@ def getTable(dest):
         return db.image
     else:
         print("No such Table!")
-        return NULL
+        return 0
 
 def renewTable(table):
     #觸發更新
