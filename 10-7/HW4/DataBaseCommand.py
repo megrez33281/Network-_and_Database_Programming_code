@@ -2,14 +2,14 @@ import MySQLdb
 
 
 def OperateDataBase(command):
-    db = MySQLdb.connect(host="localhost", user="apple", password="911004", db="test")
+    db = MySQLdb.connect(host="localhost", user="apple", password="911004", db="HW4")
     cur=db.cursor()
     cur.execute(command)
     db.commit()
     db.close()
 
 def QueryOperate(command):
-    db = MySQLdb.connect(host="localhost", user="apple", password="911004", db="test")
+    db = MySQLdb.connect(host="localhost", user="apple", password="911004", db="HW4")
     cur=db.cursor()
     cur.execute(command)
     contents = cur.fetchall()
@@ -48,10 +48,12 @@ def UpdateData(dest, col_list,  value_list, condition = ""):
     if condition != "":
         command += " where " + condition
     
-    #print(command)
+    print(command)
     OperateDataBase(command)
 
 def QueryData(select_list, source_list, condition=""):
+    ###condition中條件或許需要添加Comma
+
     #cur.execute("Select * from employee")
     command = "Select "
     for select in range(0, len(select_list)):
@@ -66,7 +68,7 @@ def QueryData(select_list, source_list, condition=""):
     if condition != "":
         command += " where " + condition
 
-    #print(command)
+    print(command)
     contents = QueryOperate(command)
     return contents
 
