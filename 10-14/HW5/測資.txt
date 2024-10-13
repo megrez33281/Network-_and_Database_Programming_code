@@ -1,0 +1,70 @@
+###新增學生資料
+D01 THOMAS TUCKER 3 男 phecda980106download@gmail.com
+D02 KAYLEE SIMPSON 3 女 phecda980106test@gmail.com
+D03 LEVI BROOKS 1 男 phecda98010650@gmail.com
+
+
+###新增課程資料
+C01 計概
+C02 網路概論
+C03 作業系統
+C04 演算法
+
+###新增選課資料
+D01 C01 50 80
+D01 C02 60 90
+D01 C04 70 100
+D02 C02 70 70
+D02 C03 60 60
+D02 C04 90 90
+D03 C01 100 90
+D03 C03 90 100
+
+###輸入期中成績
+D01 計概 50
+D01 網路概論 60
+D01 演算法 70
+D02 網路概論 70
+D02 作業系統 60
+D02 演算法 90
+D03 計概 100
+D03 作業系統 90
+
+##此時Reminder
+SID CID
+D01 C01
+
+###輸入期末成績
+D01 計概 80
+D01 網路概論 90
+D01 演算法 100
+D02 網路概論 70
+D02 作業系統 60
+D02 演算法 90
+D03 計概 90
+D03 作業系統 100
+
+###查詢總成績
+計概
+網路概論
+作業系統
+演算法
+
+
+Output
+
+學號    姓名    總成績
+D01 THOMAS TUCKER 68.0
+D03 LEVI BROOKS 94.0
+
+學號    姓名    總成績
+D01 THOMAS TUCKER 78.0
+D02 KAYLEE SIMPSON 70.0
+
+學號    姓名    總成績
+D02 KAYLEE SIMPSON 60.0
+D03 LEVI BROOKS 96.0
+
+學號    姓名    總成績
+D01 THOMAS TUCKER 88.0
+D02 KAYLEE SIMPSON 90.0

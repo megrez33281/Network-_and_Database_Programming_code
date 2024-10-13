@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import pprint
 client = MongoClient(host="localhost", port=27017)
 
-db = client.Company
+db = client.Test
 for STs in db.Employee.find():
      pprint.pprint(STs)
 print("---------------------------------------------------------------------")

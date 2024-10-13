@@ -6,5 +6,5 @@ db = client.Company
 for STs in db.Employee.find():
      pprint.pprint(STs)
 print("---------------------------------------------------------------------")
-for STs in db.Employee.find({"Name": "Brian"}):
+for STs in db.Employee.find({"Name": "AAA"}):
      pprint.pprint(STs)
