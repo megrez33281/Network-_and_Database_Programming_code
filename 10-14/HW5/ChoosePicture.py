@@ -31,3 +31,12 @@ def ReadPictureToBinary(FilePath):
     print("FileFormat = ", FileFormat)
     im.save(image_bytes, format=FileFormat)
     return image_bytes.getvalue()
+
+def BinaryToPicture(image_bytes):
+    pil_img = Image.open(io.BytesIO(image_bytes))
+    #依設定的bitmap大小而定
+    pil_img = pil_img.resize((100,100))
+    image_data = io.BytesIO()
+    pil_img.save(image_data, format="PNG")
+    image_data.seek(0)
+    return image_data

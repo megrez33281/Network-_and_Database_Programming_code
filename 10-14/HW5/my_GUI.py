@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from FrontEndCommand import clear, GetClassStudentGrade, InsertStudentClassData, InsertClassData, getCnameFromEnrollment, getCIDFromEnrollment,  getSIDFromEnrollment,  InsertStudentData, getAllStudentID, getAllCourse, UpdateGrade, getPicture
-from ChoosePicture import ChoosePicture, ReadPictureToBinary
+from ChoosePicture import ChoosePicture, ReadPictureToBinary, BinaryToPicture
 ###########################################################################
 ## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
@@ -352,7 +352,7 @@ class MyPanel7 ( wx.Panel ):
 		fgSizer3.SetFlexibleDirection( wx.BOTH )
 		fgSizer3.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
-
+		
 		self.ScrolledWindow.SetSizer( fgSizer3 )
 		self.ScrolledWindow.Layout()
 		fgSizer3.Fit( self.ScrolledWindow )
@@ -377,20 +377,18 @@ class MyPanel7 ( wx.Panel ):
 	def ScoreSearch( self, event ):
 		CourseName = self.m_comboBox2.GetValue()
 		InitializeStaticText(self)
-		labels = []
-		width = []
-		height = []
-		for i in range(1, 100):
-			labels.append("D0" + str(i))
-			width.append(100)
-			height.append(-1)
-		
-		AddStaticText(self, labels, width, height)
-		#grades = GetClassStudentGrade(CourseName)
+		grades = GetClassStudentGrade(CourseName)
 		for grade in grades:
-			pic_bytes = getPicture(grade['photo'])
-			stream = wx.MemoryInputStream(image_bytes)
-			image = wx.Image(stream, wx.BITMAP_TYPE_ANY)
+			pic = BinaryToPicture(getPicture(grade['photo']))
+			image = wx.Image(pic, wx.BITMAP_TYPE_PNG)
+			AddStaticBitmap(self, image)
+			#"照片", "學號", "姓名", "期中成績", "期末成績", "總成績", "email"
+			labels = [grade['SID'], grade['Name'], str(grade['MidScore']), str(grade['FinalScore']), str(grade['TotalScore']), grade['Email']]
+			print("labels= ", labels)
+			heights = [-1, 150, -1, -1, -1, 300]
+			widths = [100, 100, 100, 100, 100, 100]
+			AddStaticText(self, labels, heights, widths)
+
 	
 
 
@@ -473,7 +471,7 @@ def AddStaticText(self, labels, widths, heights):
 	for i in range(0, len(labels)):
 		print("label=", labels[i])
 		name = "TextInScroll" + str(i+1)
-		new_static_text = wx.StaticText( self.ScrolledWindow, wx.ID_ANY, labels[i], wx.DefaultPosition, wx.Size( widths[i],heights[i] ), 0 )
+		new_static_text = wx.StaticText( self.ScrolledWindow, wx.ID_ANY, labels[i], wx.DefaultPosition, wx.Size( widths[i],heights[i] ), 0)
 		new_static_text.Wrap( -1 )
 		fgSizer.Add( new_static_text, 0, wx.ALL, 5 )
 	fgSizer.Layout()
@@ -481,15 +479,29 @@ def AddStaticText(self, labels, widths, heights):
 	self.Layout()
 
 
+def AddStaticBitmap(self, image):
+	#查詢總成績時用於添加圖片
+	bitmap = wx.StaticBitmap( self.ScrolledWindow, wx.ID_ANY, image, wx.DefaultPosition, wx.Size(100, 100), 0 )
+	fgSizer = self.ScrolledWindow.GetSizer()
+	fgSizer.Add( bitmap, 0, wx.ALL, 5 )
+	fgSizer.Layout()
+	self.ScrolledWindow.Layout()
+	self.Layout()
+
 def InitializeStaticText(self):
 	#初始化查詢總成績
 	fgSizer = wx.FlexGridSizer( 0, 7, 0, 0 )
 	fgSizer.SetFlexibleDirection( wx.BOTH )
 	fgSizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+	childrens = self.ScrolledWindow.GetChildren()
+	for child in childrens:
+		child.Destroy()
 	self.ScrolledWindow.SetSizer(None)
 	self.ScrolledWindow.SetSizer(fgSizer)
 	labels = ["照片", "學號", "姓名", "期中成績", "期末成績", "總成績", "email"]
 	widths = [100, -1, 150, -1, -1, -1, 300]
 	heights = [-1, -1, -1, -1, -1, -1, -1]
 	AddStaticText(self, labels, widths, heights)
+
+
 

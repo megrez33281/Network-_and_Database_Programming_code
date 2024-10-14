@@ -46,7 +46,7 @@ def GetClassStudentGrade(courseName):
     for student in CourseDatas:
         #取得期中期末成績
         student_list.append({"SID":student['SID'], "MidScore":student['MidScore'], "FinalScore": student['FinalScore'], "TotalScore":int(student['MidScore'])*0.4 + int(student['FinalScore'])*0.6})
-
+    print("Student List = ", student_list)
     student_list_detail = []
     for student in student_list:
         #取得學生資料
