@@ -30,6 +30,26 @@
 
     </div>
     <div class="form-block">
+        <form class="form-submit-block" method='post' action={{ url_for('addclass') }}>
+            <div class="form-complement">
+                <label>課程代碼：</label>
+                <input class = "form-input" name="cid">
+            </div>
+            <div class="form-complement">
+                <label>課程名稱：</label>
+                <input class = "form-input" name="cname">
+            </div>
+            <div onclick="this.parentNode.submit()" class="form-complement form-submit">
+                <label onclick="this.parentNode.click()" style="margin:auto; cursor:pointer">提交</label>
+            </div>
+        
+            <div class="from-response">
+                {%if cData %}
+                新增課程資料 課程代碼：{{cData['cid']}}    課程名稱：{{cData['cname']}}
+                {%endif%}
+            </div>
+
+        </form>
 
     </div>
 </body>

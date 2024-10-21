@@ -30,7 +30,33 @@
 
     </div>
     <div class="form-block">
-
+        <form class="form-submit-block" method='post' action={{ url_for('addenrollment') }}>
+            <div class="form-complement">
+                <label>學號：</label>
+                <select class="form-select" id="sid" name="sid">
+                    {%for sdata in sDatas %}
+                    <option value={{sdata}}>{{sdata}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-complement">
+                <label>課程代碼：</label>
+                <select class="form-select" id="cid" name="cid">
+                    {%for course in course_list %}
+                    <option value={{course[0]}}>{{course[0]}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div onclick="this.parentNode.submit()" class="form-complement form-submit">
+                <label onclick="this.parentNode.click()" style="margin:auto; cursor:pointer">提交</label>
+            </div>
+            
+            <div class="from-response">
+                {%if cData %}
+                新增選課資料 學號：{{cData['sid']}}    課程代碼：{{cData['cid']}} 課程名稱：{{course_dict[cData['cid']]}}
+                {%endif%}
+            </div>
+        </form>
     </div>
 </body>
 </html>

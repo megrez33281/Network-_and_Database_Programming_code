@@ -50,15 +50,20 @@
             </div>
             <div class="form-complement">
                 <label>性別：</label>
-                <input class="form-radio" type="radio" name="student-sex" value="M">
+                <input class="form-radio" type="radio" name="student-sex" value="男">
                 <label>男</label>
-                <input class="form-radio" type="radio" name="student-sex" value="F">
+                <input class="form-radio" type="radio" name="student-sex" value="女">
                 <label>女</label>
             </div>
             <div onclick="this.parentNode.submit()" class="form-complement form-submit">
                 <label onclick="this.parentNode.click()" style="margin:auto; cursor:pointer">提交</label>
             </div>
-
+            
+            <div class="from-response">
+                {%if stData %}
+                新增學生資料 學號：{{stData['SID']}}    姓名：{{stData['sname']}}   年級：{{stData['grade']}}   性別：{{stData['student-sex']}}
+                {%endif%}
+            </div>
         </form>
     </div>
 </body>

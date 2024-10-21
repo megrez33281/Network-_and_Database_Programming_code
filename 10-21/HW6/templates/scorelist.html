@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="../static/style.css"/>
+    <title>查詢總成績</title>
+</head>
+<body>
+    <div class="function-block">
+        <div class="funcion-button"onclick="this.querySelector('.function-link').click()">
+            <span class = "function-button-text">新增學生資料</span>
+            <a class="function-link" href="/addstudent"></a>
+        </div>
+        <div class="funcion-button" onclick="this.querySelector('.function-link').click()">
+            <span class = "function-button-text">新增課程資料</span>
+            <a class="function-link" href="/addclass"></a>
+        </div>
+        <div class="funcion-button" onclick="this.querySelector('.function-link').click()">
+            <span class = "function-button-text">新增選課資料</span>
+            <a class="function-link" href="/addenrollment"></a>
+        </div>
+        <div class="funcion-button" onclick="this.querySelector('.function-link').click()">
+            <span class = "function-button-text">輸入期中期末成績</span>
+            <a class="function-link" href="/insertscore"></a>
+        </div>
+        <div class="funcion-button"  style="background-color: plum;" onclick="this.querySelector('.function-link').click()">
+            <span class = "function-button-text">查詢總成績</span>
+            <a class="function-link" href="/searchscore"></a>
+        </div>
+
+    </div>
+    <div class="score-list-block form-block">
+        <div class="class-name-block">
+            <span class="class-name-block-text">課程名稱：{{courseName}}</span>
+        </div>
+        <ul id="score-list" class="score-list">
+            <li class="a-score-block">
+                <div class="in-score-block">
+                    <strong  class="in-score-block-text bigger">Tom</strong>
+                    <span  class="in-score-block-text">學號：D01</span>
+                    <span  class="in-score-block-text">分數：100</span>
+                </div>
+            </li>
+            <li class="a-score-block"></li>
+            <li class="a-score-block"></li>
+            <li class="a-score-block"></li>
+            <li class="a-score-block"></li>
+
+        </ul>
+        <div class="page-list-box">
+            <ul class="page-list">
+                <li class = 'page-box last-page'>
+                    <span class="page-number">
+                        首頁
+                    </span>
+                </li>
+                <li class = 'page-box'>
+                    <span class="page-number">
+                        1
+                    </span>
+                </li>
+                <li class = 'page-box'>
+                    <span class="page-number">
+                        2
+                    </span>
+                </li>
+                <li class = 'page-box'>
+                    <span class="page-number">
+                        3
+                    </span>
+                </li>
+                <li class = 'page-box'>
+                    <span class="page-number">
+                        ...
+                    </span>
+                </li>
+                <li class = 'page-box'>
+                    <span class="page-number">
+                        40
+                    </span>
+                </li>
+
+            </ul>
+            <input id="score-now-page" style="display: none;" value="1">
+            <input id="number-each-list" style="display: none;" value={{page_data_number}}>
+            <input id="courseName" style="display: none;" value={{courseName}}>
+            {%for grade in grades %}
+                <input class="grade-data" style="display: none;" value={{grade}}>
+            {% endfor %}
+        </div>
+        
+       
+    </div>
+    <script>
+        function MakeLi(sid, name, grade){
+            li_element = document.createElement('li')
+            li_element.className = "a-score-block"
+
+            div_element = document.createElement("div")
+            div_element.className = "in-score-block"
+
+            strong_element = document.createElement('strong')
+            strong_element.className = "in-score-block-text bigger"
+            strong_element.innerHTML = name
+            
+            sid_span = document.createElement('span')
+            sid_span.className  = "in-score-block-text"
+            sid_span.innerHTML = sid
+
+            score_span = document.createElement('span')
+            score_span.className  = "in-score-block-text"
+            score_span.innerHTML = grade
+
+            div_element.appendChild(strong_element)
+            div_element.appendChild(sid_span)
+            div_element.appendChild(score_span)
+
+            li_element.appendChild(div_element)
+            return li_element
+        }
+        var score_div = document.querySelector('#score-list');
+        var list_number = parseInt(document.querySelector('#number-each-list').value)
+        var nowPage = parseInt(document.querySelector('#score-now-page').value)
+        var get_grades = document.querySelectorAll('.grade-data')
+        var CourseName = document.querySelector('#courseName').value
+        var grades = []
+        
+        console.log(list_number, nowPage, CourseName)
+        for(let i =0; i<get_grades.length; i++){
+            var data = get_grades[i].value.split("||")
+            grades.push(data)
+        }
+        var total_page = Math.ceil(grades.length/list_number)
+        console.log(total_page)
+        //清空ul內容
+        score_div.innerHTML = "";
+        for(let i=0; i<list_number; i++){
+            now_index = i + list_number*(nowPage-1)
+            console.log("now index", now_index);
+            if(now_index >= grades.length){
+                break
+            }
+            var grade = grades[now_index]
+            score_div.appendChild(MakeLi(grade[1] + " " + grade[2], grade[0], CourseName + "：" + grade[3] + "分"))
+        }
+        console.log(grades);
+
+
+        
+
+    </script>
+</body>
+</html>

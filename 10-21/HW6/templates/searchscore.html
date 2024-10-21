@@ -30,7 +30,25 @@
 
     </div>
     <div class="form-block">
-
+        <form class="form-submit-block" method='post' action={{ url_for('searchscore') }}>
+            <div class="form-complement">
+                <label>課程名稱：</label>
+                <select class="form-select" id="cname" name="cname">
+                    {%for course in Course_List %}
+                    <option value={{course[1]}}>{{course[1]}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div onclick="this.parentNode.submit()" class="form-complement form-submit">
+                <label onclick="this.parentNode.click()" style="margin:auto; cursor:pointer">提交</label>
+            </div>
+            
+            <div class="from-response">
+                {%if scoreData %}
+                輸入成績 學號：{{scoreData['sid']}}  課程名稱：{{scoreData['cname']}} 期中成績：{{scoreData['midterm']}} 期末成績：{{scoreData['final']}}
+                {%endif%}
+            </div>
+        </form>
     </div>
 </body>
 </html>
