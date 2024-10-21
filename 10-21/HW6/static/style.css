@@ -1,0 +1,82 @@
+html, body{
+    overflow: hidden;
+}
+.form-block {
+    width: 700px;
+    height: 500px;
+    border: 2px black solid;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+
+}
+
+.function-block {
+    width: 700px;
+    height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    display: flex;
+    flex-direction: row;
+}
+
+.funcion-button {
+    background-color: aqua;
+    width: 130px;
+    height: 70px;
+    margin: auto;
+    align-content: center;
+    border-radius:  70px;
+    cursor: pointer;
+
+}
+
+.function-button-text{
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.form-submit-block {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size:  60px;
+}
+
+.form-complement {
+    margin-top: 10px;
+    margin-bottom:  10px;
+    display: block;
+
+}
+
+.form-input {
+    height: 60px;
+    width: 300px;
+    font-size: inherit;
+}
+
+.form-submit {
+    font-size: 30px;
+    background-color: aliceblue;
+    width: 80px;
+    height: 60px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+}
+.form-radio {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.form-select {
+    width: 200px;
+    height: 70px;
+    font-size: 60px;
+}
