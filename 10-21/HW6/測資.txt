@@ -1,0 +1,76 @@
+###新增學生資料
+D01 Thomas Tucker 3 男
+D02 Kaylee Simpson 3 女
+D03 Levi Brooks 1 男
+D04 Ethan Parker 2 女
+D05 Olivia Thompson 4 男
+D06 Noah Bennett 1 女
+D07 Ava Mitchell 2 男
+
+
+###新增課程資料
+C01 計概
+C02 網路概論
+C03 作業系統
+C04 演算法
+
+###新增選課資料
+D01 C01
+D01 C02
+D01 C04
+D02 C02
+D02 C03
+D02 C04
+D03 C01
+D03 C02
+D03 C03
+D04 C02
+D05 C02
+D06 C02
+D07 C02
+
+###輸入期中成績
+D01 計概 60 80
+D01 網路概論 60 90
+D01 演算法 70 100
+D02 網路概論 70 70
+D02 作業系統 60 60
+D02 演算法 90 90
+D03 計概 40 90
+D03 網路概論 60 60
+D03 作業系統 50 100
+D04 網路概論 10 10
+D05 網路概論 20 20
+D06 網路概論 30 30
+D07 網路概論 40 40
+
+
+###查詢總成績
+計概
+網路概論
+作業系統
+演算法
+
+
+Output
+
+學號    姓名    總成績
+D01 THOMAS TUCKER 72.0
+D03 LEVI BROOKS 70.0
+
+學號    姓名    總成績
+D01 THOMAS TUCKER 78.0
+D02 KAYLEE SIMPSON 70.0
+D03 Levi Brook 60
+D04 Ethan Parker 10
+D05 Olivia Thompson 20
+D06 Noah Bennett 30
+D07 Ava Mitchell 40
+
+學號    姓名    總成績
+D02 KAYLEE SIMPSON 60.0
+D03 LEVI BROOKS 80.0
+
+學號    姓名    總成績
+D01 THOMAS TUCKER 88.0
+D02 KAYLEE SIMPSON 90.0

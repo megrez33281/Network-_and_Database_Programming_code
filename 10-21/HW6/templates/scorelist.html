@@ -63,7 +63,7 @@
        
     </div>
     <script>
-        function MakeLi(sid, name, grade){
+        function MakeLi(name, sid, grade){
             li_element = document.createElement('li')
             li_element.className = "a-score-block"
 
@@ -76,7 +76,7 @@
             
             sid_span = document.createElement('span')
             sid_span.className  = "in-score-block-text"
-            sid_span.innerHTML = sid
+            sid_span.innerHTML = "學號：" + sid
 
             score_span = document.createElement('span')
             score_span.className  = "in-score-block-text"

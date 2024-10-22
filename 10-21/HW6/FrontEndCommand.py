@@ -106,9 +106,9 @@ if __name__ == '__main__':
     #UpdateMidterm('D01', '計概', 100)
     #UpdateFinal('D01', '計概', 50)
     #print(GetClassStudentGrade("計概")[0][2])
-    print(getAllStudentID())
-    print(getAllCourse())
-    #clear()
+    #print(getAllStudentID())
+    #print(getAllCourse())
+    clear()
 
 
     
