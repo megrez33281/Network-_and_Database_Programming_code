@@ -49,41 +49,12 @@
         </ul>
         <div class="page-list-box">
             <ul class="page-list">
-                <li class = 'page-box last-page'>
-                    <span class="page-number">
-                        首頁
-                    </span>
-                </li>
-                <li class = 'page-box'>
-                    <span class="page-number">
-                        1
-                    </span>
-                </li>
-                <li class = 'page-box'>
-                    <span class="page-number">
-                        2
-                    </span>
-                </li>
-                <li class = 'page-box'>
-                    <span class="page-number">
-                        3
-                    </span>
-                </li>
-                <li class = 'page-box'>
-                    <span class="page-number">
-                        ...
-                    </span>
-                </li>
-                <li class = 'page-box'>
-                    <span class="page-number">
-                        40
-                    </span>
-                </li>
+
 
             </ul>
-            <input id="score-now-page" style="display: none;" value="1">
             <input id="number-each-list" style="display: none;" value={{page_data_number}}>
             <input id="courseName" style="display: none;" value={{courseName}}>
+            <input id="show_page_number" style="display: none" value={{show_page_number}}>
             {%for grade in grades %}
                 <input class="grade-data" style="display: none;" value={{grade}}>
             {% endfor %}
@@ -118,35 +89,193 @@
             li_element.appendChild(div_element)
             return li_element
         }
+
+        function MakePageBox(innerValue){
+            li_element = document.createElement('li')
+            li_element.className = "page-box"
+            span_element = document.createElement('span')
+            span_element.className = "page-number"
+            span_element.innerHTML = innerValue
+            li_element.appendChild(span_element)
+            return li_element
+            
+        }
+
+        function MakePageFrame(total_page, show_page){
+            var page_box_list = []
+            if(show_page >= total_page){
+                for(let i=0; i<total_page; i++){
+                    console.log("Make a page box")
+                    var li_element = MakePageBox(i+1)
+                    page_box_list.push(li_element)
+                }
+            }
+            else{
+                for(let i=0; i<show_page-2; i++){
+                    //最後兩格分別是...和最後一頁
+                    var li_element = MakePageBox(i+1)
+                    page_box_list.push(li_element)
+                }
+                page_box_list.push(MakePageBox('...'))
+                page_box_list.push(MakePageBox(total_page))
+            }
+            return page_box_list
+        }
+
+        function PutScoreList(score_div, list_number, nowPage){
+            //清空ul內容
+            score_div.innerHTML = "";
+            //放置對應內容
+            for(let i=0; i<list_number; i++){
+                now_index = i + list_number*(nowPage-1)
+                console.log("now index", now_index);
+                if(now_index >= grades.length){
+                    break
+                }
+                var grade = grades[now_index]
+                score_div.appendChild(MakeLi(grade[1] + " " + grade[2], grade[0], CourseName + "：" + grade[3] + "分"))
+            }
+            console.log(grades);
+        }
         var score_div = document.querySelector('#score-list');
         var list_number = parseInt(document.querySelector('#number-each-list').value)
-        var nowPage = parseInt(document.querySelector('#score-now-page').value)
         var get_grades = document.querySelectorAll('.grade-data')
         var CourseName = document.querySelector('#courseName').value
+        var ShowPage = parseInt(document.querySelector('#show_page_number').value)
         var grades = []
         
-        console.log(list_number, nowPage, CourseName)
+        console.log(list_number, CurrentPage, CourseName)
         for(let i =0; i<get_grades.length; i++){
             var data = get_grades[i].value.split("||")
             grades.push(data)
         }
-        var total_page = Math.ceil(grades.length/list_number)
         console.log(total_page)
-        //清空ul內容
-        score_div.innerHTML = "";
-        for(let i=0; i<list_number; i++){
-            now_index = i + list_number*(nowPage-1)
-            console.log("now index", now_index);
-            if(now_index >= grades.length){
-                break
+        var CurrentPage = 1
+        PutScoreList(score_div, list_number, CurrentPage)
+        var total_page = Math.ceil(grades.length/list_number)
+        var page_list_container = document.querySelector('.page-list')
+        var page_box_list = MakePageFrame(total_page, ShowPage)
+        page_list_container.innerHTML = ""
+        for(let i=0; i<page_box_list.length; i++){
+            if(i == 0){
+                //第一頁先染色
+                page_box_list[i].style.backgroundColor = "blue";
+                page_box_list[i].querySelector('.page-number').style.color = "white"
             }
-            var grade = grades[now_index]
-            score_div.appendChild(MakeLi(grade[1] + " " + grade[2], grade[0], CourseName + "：" + grade[3] + "分"))
+            page_list_container.appendChild(page_box_list[i])
         }
-        console.log(grades);
+
+       
+        var all_page_boxes = document.querySelectorAll('.page-box')
+        //添加點擊事件
+        all_page_boxes.forEach(box => box.addEventListener('click', ()=>{
+            var innerSpan = box.querySelector('.page-number')
+            if(innerSpan.innerHTML == "..."){
+                //"..."無換頁功能
+                return;
+            }
+            CurrentPage = parseInt(innerSpan.innerHTML)
+            PutScoreList(score_div, list_number, CurrentPage) //放置對應的score list
+            var start = 1;
+            var end = all_page_boxes.length-1
+            if(total_page > ShowPage && CurrentPage < total_page/2){
+                //放置...
+                console.log("...放在右邊")
+                all_page_boxes[ShowPage-2].querySelector('.page-number').innerHTML = "..."
+                end -= 1
+            }
+            else if(total_page > ShowPage){
+                console.log("...放在左邊")
+                all_page_boxes[1].querySelector('.page-number').innerHTML = "..."
+                start += 1
+            }
+            else{
+                console.log("沒有放...")
+            }
+
+            if(CurrentPage == 1 || CurrentPage == total_page){
+                //回到第一頁
+                if(CurrentPage == 1){
+                    for(let i=0; i<ShowPage-2; i++){
+                        all_page_boxes[i].querySelector('.page-number').innerHTML = i+1
+                    }
+                }
+                else{
+                    var count = 0
+                    for(let i=ShowPage-1; i>1 && i<all_page_boxes.length; i--){
+                        all_page_boxes[i].querySelector('.page-number').innerHTML = total_page-count
+                        count += 1
+                    }
+                }   
+                for(let i=0; i< all_page_boxes.length && i<ShowPage; i++){
+                    var box_value = all_page_boxes[i].querySelector('.page-number').innerHTML
+                    if(box_value == "..."){
+                        continue
+                    }
+                    else if(parseInt(box_value) == CurrentPage){
+                        all_page_boxes[i].style.backgroundColor = "blue";
+                        all_page_boxes[i].querySelector('.page-number').style.color = "white"
+                    }
+                    else{
+                        all_page_boxes[i].style.backgroundColor = "transparent";
+                        all_page_boxes[i].querySelector('.page-number').style.color = "skyblue"
+                    }
+                }
+                return
+            }
+
+            //更新page_box中的頁碼（第一個和最後一個page_box分別放第一頁和最後一頁，不會更新）
+            var middlePageNumber = end-start
+            if(middlePageNumber > total_page-CurrentPage){
+                //接近結尾
+                console.log("End!!!!!")
+                for(let i=start; i<end; i++){
+                    all_page_boxes[i].querySelector('.page-number').innerHTML = total_page-(end-i);
+                }
+            }
+            else if(middlePageNumber >= CurrentPage){
+                //接近開頭
+                console.log("First!!!!!!")
+                for(let i=start; i<end; i++){
+                    all_page_boxes[i].querySelector('.page-number').innerHTML = start+i;
+                }
+            }
+            else{
+                console.log("Middle!!!!!", "中間有", middlePageNumber, "格, ", "當前頁數為", CurrentPage)
+                //確保CurrentPage放在正中或者中間偏右
+                var middle = Math.ceil(middlePageNumber/2)
+                console.log("CurrentPage應該放在第", middle, "格")
+                var startValue = CurrentPage - (middle-1)
+                console.log("格子的起始數字為", startValue)
+                console.log("當前start為", start)
+                for(let i=start; i <end; i++){
+                    all_page_boxes[i].querySelector('.page-number').innerHTML = startValue;
+                    startValue += 1;
+                }
+            }
+
+            //染色
+            for(let i=0;  i< all_page_boxes.length && i<ShowPage; i++){
+                var box_value = all_page_boxes[i].querySelector('.page-number').innerHTML
+                console.log("box_value", box_value)
+                if(box_value == "..."){
+                    all_page_boxes[i].style.backgroundColor = "transparent";
+                    all_page_boxes[i].querySelector('.page-number').style.color = "skyblue"
+                }
+                else if(parseInt(box_value) == CurrentPage){
+                    all_page_boxes[i].style.backgroundColor = "blue";
+                    all_page_boxes[i].querySelector('.page-number').style.color = "white"
+                }
+                else{
+                    all_page_boxes[i].style.backgroundColor = "transparent";
+                    all_page_boxes[i].querySelector('.page-number').style.color = "skyblue"
+                }
+            }
+
+        }))
 
 
-        
+
 
     </script>
 </body>

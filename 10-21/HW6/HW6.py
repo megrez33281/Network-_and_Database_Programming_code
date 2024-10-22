@@ -74,7 +74,8 @@ def scorelist():
     for grade in grades:
         grade_data.append(grade[0] + "||" + grade[1] + "||" + grade[2] + "||" + str(grade[3]))
     page_data_number = 5
-    return render_template('scorelist.html', courseName=courseName, page_data_number=page_data_number, grades=grade_data)
+    show_page_number = 6
+    return render_template('scorelist.html', courseName=courseName, page_data_number=page_data_number, grades=grade_data, show_page_number=show_page_number)
 
 @app.route('/addstudent', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])

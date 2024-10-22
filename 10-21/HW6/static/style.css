@@ -1,6 +1,10 @@
 html, body{
     overflow: hidden;
 }
+span, label {/*避免span或者label中的文字被選取*/
+    user-select: none;
+    
+ }
 .form-block {
     width: 700px;
     height: 500px;
@@ -97,12 +101,14 @@ html, body{
 }
 .score-list {
     margin-top: 20px;
+    height: 350px;
     display: inline-flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
     list-style-type: none;
-    padding: 0px 10px
+    padding: 0px 10px;
+    caret-color: transparent;
 
 }
 .a-score-block {
