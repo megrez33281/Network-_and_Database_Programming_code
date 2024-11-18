@@ -97,26 +97,25 @@ if __name__ == '__main__':
                 rounded=True,                # 使用圓角
                 fontsize=10)                 # 設定字型大小
 
-    # 顯示圖片
-    plt.show()
-
     #計算entropy進行驗證：
-    print("PlayTennis_entropy = ", entropy(data, 'PlayTennis'))
+    PlayTennis_Entropy =  entropy(data, 'PlayTennis')
+    print("PlayTennis_entropy = ", round(PlayTennis_Entropy, 3))
     
 
     min_entropy = None
-    max_information_gain = None
     choose_col = None
     for col in data.drop('PlayTennis', axis=1):
         #每次決策應該選擇分類後，PlayTennis的Entropy值最小的（各邊PlayTennis的Entropy*佔比的和）或information gain最大的
         choose_col_entropy = conditional_entropy(data, col)
         choose_col_information_gain = Gain(data, col)
-        print(col, "entropy = ", choose_col_entropy, "information gain = ", choose_col_information_gain)
+        print(col, "entropy = ", choose_col_entropy, round(choose_col_entropy-PlayTennis_Entropy, 3))
         #在此以entropy進行選擇
         if min_entropy == None or choose_col_entropy < min_entropy:
             min_entropy = choose_col_entropy
-            max_information_gain = choose_col_information_gain
             choose_col = col
     #print(data)
     print()
-    print("choose", "'" + choose_col + "', ", "entropy = ", min_entropy, "information gain = ", max_information_gain)
+    print("choose", "'" + choose_col + "', ", min_entropy, round(min_entropy-PlayTennis_Entropy,3))
+
+    # 顯示圖片
+    plt.show()
