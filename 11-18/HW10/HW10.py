@@ -79,7 +79,8 @@ def Gain(data:pd.DataFrame, attribute:str):
 
 
 if __name__ == '__main__':
-    data = read_csv_file("./HW10/data.csv")
+    #讀取資料
+    data = read_csv_file("./data.csv")
     data = Transform_to_Discrete(data)
     X = data.drop('PlayTennis', axis=1)
     Y = data['PlayTennis'].astype(str)  #輸入兩個instance的類別，此處為要/不要玩羽毛球
@@ -97,7 +98,7 @@ if __name__ == '__main__':
                 fontsize=10)                 # 設定字型大小
 
     # 顯示圖片
-    #plt.show()
+    plt.show()
 
     #計算entropy進行驗證：
     print("PlayTennis_entropy = ", entropy(data, 'PlayTennis'))
