@@ -1,7 +1,7 @@
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 
 
@@ -28,11 +28,17 @@ def preProcessing(flower):
     return X_train, X_test, y_train, y_test, label_names
 
 def trainKNN(X_train, y_train, n_neighbors):
-    knn_model = KNeighborsRegressor(n_neighbors=n_neighbors) 
-    knn_model.fit(X_train, y_train) 
+    knn_model = KNeighborsClassifier(n_neighbors=n_neighbors)
+    class_labels = list(set(y_train))[:-1]
+    for label in range(0, len(class_labels)):
+        class_labels[label] += 0.5
+    
+    y_train_class = np.digitize(y_train, bins=class_labels)  # 自定義區間 
+    knn_model.fit(X_train, y_train_class) 
     return knn_model
 
 def predict(KNNmodel, data_point):
+
     prediction = KNNmodel.predict([data_point])
     return prediction
 
@@ -43,7 +49,7 @@ def classify_prediction(prediction, label_names):
 def testKNNmodel():
     flower = ReadCSV()
     X_train, X_test, y_train, y_test, label_names = preProcessing(flower)
-    KNNmodel = trainKNN(X_train, y_train, 3) # 結果有三種 => 分三群
+    KNNmodel = trainKNN(X_train, y_train, 5) # 以最近的5個點vote
     correct = 0
     for test in range(0, len(X_test)):
         prediction = predict(KNNmodel, X_test[test])
@@ -55,10 +61,30 @@ def testKNNmodel():
 def caculation_knn(X_train, y_train, test_data, k):
     distance = np.linalg.norm(X_train - test_data, axis=1) #計算資料案例與新案例的距離list
     k_nearest_indices = np.argsort(distance)[:k] #選前k個最小的index
-    means = np.sum(y_train[k_nearest_indices])/k
+
+    # label = y_train[k_nearest_indices]
+    # 進行投票
+    classes = list(set(y_train))
+    a_list = []
+    for i in classes:
+        a_list.append(int(0))
+
+    for label in y_train[k_nearest_indices]:
+        a_list[label] += 1
+    
+    max_index = 0
+    max_value = a_list[0]
+    for a in range(0, len(a_list)):
+        if a_list[a] > max_value:
+            max_value = a_list[a]
+            max_index = a
+
+    #print(a_list)
+    #print(max_index)
+    #means = np.sum(y_train[k_nearest_indices])/k
 
 
-    return [means]
+    return [max_index]
 
 
 if __name__ == '__main__':
@@ -69,7 +95,7 @@ if __name__ == '__main__':
     correct_knn = 0
     print("計算KNN預測", "scikit_learn預測", "真實標籤")
     for test in range(0, len(X_test)):
-        prediction_caculation = caculation_knn( X_train, y_train, X_test[test], 3)
+        prediction_caculation = caculation_knn( X_train, y_train, X_test[test], 5)
         prediction_knn = predict(KNNmodel, X_test[test])
         caculation_classify = classify_prediction(prediction_caculation, label_names)
         knn_classify = classify_prediction(prediction_knn, label_names)
@@ -81,6 +107,15 @@ if __name__ == '__main__':
             correct_knn += 1
         
 
+
     print("計算KNN預測 accuracy =", correct_caculation/len(X_test))
     print("scikit_learn預測 accuracy =", correct_knn/len(X_test))
+
+
+    # 新的測資
+    new_data = [4.6,3.4,1.4,0.2]
+    prediction_caculation = caculation_knn( X_train, y_train, new_data, 5)
+    prediction_knn = predict(KNNmodel, new_data)
+    print("計算KNN預測 accuracy", classify_prediction(prediction_caculation, label_names))
+    print("scikit_learn預測", classify_prediction(prediction_knn, label_names))
 
