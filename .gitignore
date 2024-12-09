@@ -1,2 +1,7 @@
 env
 venv
+windows_v1.8.1
+labelImg
+yolov5
+*.zip
+

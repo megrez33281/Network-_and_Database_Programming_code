@@ -1,0 +1,8 @@
+path: C:\Users\apple\Downloads\dataset
+train: train
+val: val
+
+# classes
+names:
+  0: ruler
+  1: utility knife
